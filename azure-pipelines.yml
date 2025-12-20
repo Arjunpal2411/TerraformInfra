@@ -1,0 +1,65 @@
+trigger: none
+
+pool: AJPOOL
+
+stages:
+  - stage: Terraform_Init_Plan
+    jobs:
+      - job: Terraform_init
+        steps:
+        - task: TerraformInstaller@1
+          displayName: Terraform_Install
+          inputs:
+            terraformVersion: 'latest'
+
+        - task: TerraformTask@5
+          displayName: Terraform_Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Dev'
+            backendServiceArm: 'Terraform-SVC'
+            backendAzureRmStorageAccountName: 'ajstg'
+            backendAzureRmContainerName: 'brucecontainer'
+            backendAzureRmKey: 'terraform.tfstate'
+
+        - task: TerraformTask@5
+          displayName: Terraform_Plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Dev'
+            environmentServiceNameAzureRM: 'Terraform-SVC'
+
+  - stage: Manual_Validation
+    pool: server
+    jobs:
+      - job: Manual_Validation
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'arjun@hshasharma89gmail.onmicrosoft.com'
+            approvers: 'arjun@hshasharma89gmail.onmicrosoft.com'
+
+  - stage: Terraform_Apply
+    jobs:
+      - job: Terraform_Apply
+        steps:
+        - task: TerraformTask@5
+          displayName: Terraform_Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Dev'
+            backendServiceArm: 'Terraform-SVC'
+            backendAzureRmStorageAccountName: 'ajstg'
+            backendAzureRmContainerName: 'brucecontainer'
+            backendAzureRmKey: 'terraform.tfstate'
+
+        - task: TerraformTask@5
+          displayName: Terraform_Apply
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Dev'
+            environmentServiceNameAzureRM: 'Terraform-SVC'
