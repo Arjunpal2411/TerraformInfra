@@ -41,6 +41,7 @@ stages:
             environmentServiceNameAzureRM: 'Terraform-SVC'
         
         - task: SonarQubeAnalyze@8
+          condition: eq(variables['Build.SourceBranchName'], 'main')
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
         
