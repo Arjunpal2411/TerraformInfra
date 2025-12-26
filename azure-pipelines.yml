@@ -16,6 +16,15 @@ stages:
             configMode: 'manual'
             cliProjectKey: 'AJ-DEVSECOPS_TerraformInfra.git_b3b596d6-767b-4a9d-b407-f2b565ccca22'
             cliSources: '$(System.DefaultWorkingDirectory)/Dev'
+
+        - task: SonarQubeAnalyze@8
+          inputs:
+            jdkversion: 'JAVA_HOME_17_X64'
+        
+        - task: SonarQubePublish@8
+          inputs:
+            pollingTimeoutSec: '300'
+
         - task: TerraformInstaller@1
           displayName: Terraform_Install
           inputs:
@@ -40,14 +49,7 @@ stages:
             workingDirectory: '$(System.DefaultWorkingDirectory)/Dev'
             environmentServiceNameAzureRM: 'Terraform-SVC'
         
-        - task: SonarQubeAnalyze@8
-          condition: eq(variables['Build.SourceBranchName'], 'main')
-          inputs:
-            jdkversion: 'JAVA_HOME_17_X64'
-        
-        - task: SonarQubePublish@8
-          inputs:
-            pollingTimeoutSec: '300'
+
 
   - stage: Manual_Validation
     pool: server
