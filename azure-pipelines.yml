@@ -8,14 +8,17 @@ stages:
     jobs:
       - job: Terraform_init
         steps:
-
+        
         - task: SonarQubePrepare@8
+          displayName: SonarScan
           inputs:
             SonarQube: 'Sonar-SVC-Connect'
             scannerMode: 'cli'
             configMode: 'manual'
             cliProjectKey: 'AJ-DEVSECOPS_TerraformInfra.git_b3b596d6-767b-4a9d-b407-f2b565ccca22'
             cliSources: '$(System.DefaultWorkingDirectory)/Dev'
+            extraProperties: 
+        
 
         - task: SonarQubeAnalyze@8
           inputs:
