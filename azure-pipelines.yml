@@ -11,6 +11,7 @@ stages:
         
         - task: SonarQubePrepare@8
           displayName: SonarScan
+          condition: eq(variables['Build.SourceBranchName'], 'main')
           inputs:
             SonarQube: 'Sonar-SVC-Connect'
             scannerMode: 'cli'
@@ -21,10 +22,12 @@ stages:
         
 
         - task: SonarQubeAnalyze@8
+          condition: eq(variables['Build.SourceBranchName'], 'main')
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
         
         - task: SonarQubePublish@8
+          condition: eq(variables['Build.SourceBranchName'], 'main')
           inputs:
             pollingTimeoutSec: '300'
 
