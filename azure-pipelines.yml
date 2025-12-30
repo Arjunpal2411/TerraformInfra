@@ -57,15 +57,17 @@ stages:
             version: 'v1.26.0'
             dir: '$(System.DefaultWorkingDirectory)/Dev'
 
+
         - task: PowerShell@2
+          displayName: TFLINT
           inputs:
             targetType: 'inline'
-            script: 
+            script: |
               cd $(System.DefaultWorkingDirectory)/Dev
-              tflint init
+              
+              tflint --init
+              
               tflint
-
-        
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
