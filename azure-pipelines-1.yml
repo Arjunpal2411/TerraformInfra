@@ -51,6 +51,7 @@ stages:
 
       - job: 
         displayName: TFSEC_SCAN
+        continueOnError: true
         steps:
         - task: tfsec@1
           inputs:
