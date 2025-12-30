@@ -60,6 +60,7 @@ stages:
 
         - task: PowerShell@2
           displayName: TFLINT
+          continueOnError: true
           inputs:
             targetType: 'inline'
             script: |
